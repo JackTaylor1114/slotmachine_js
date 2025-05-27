@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Slot Machine</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <h1>🎰 Slot Machine 🎰</h1>
+
+  <div class="machine" id="machine">
+    <div class="column" id="column0">
+      <div class="icons"></div>
+    </div>
+    <div class="column" id="column1">
+      <div class="icons"></div>
+    </div>
+    <div class="column" id="column2">
+      <div class="icons"></div>
+    </div>
+    <div class="column" id="column3">
+      <div class="icons"></div>
+    </div>
+    <div class="column" id="column4">
+      <div class="icons"></div>
+    </div>
+  </div>
+
+  <button onclick="startSpin()">Drehen</button>
+
+  <audio id="wheelSound" src="audio/wheel.wav"></audio>
+
+  <script type="text/javascript" src="source.js"></script>
+</body>
+
+</html>
