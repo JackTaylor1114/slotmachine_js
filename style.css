@@ -43,3 +43,19 @@ button {
   cursor: pointer;
   margin-top: 20px;
 }
+
+.icon.win {
+  border: 2px solid gold;
+  background: yellow;
+  animation: winFlash 0.3s alternate 10;
+}
+
+@keyframes winFlash {
+  from {
+    background: orange;
+  }
+
+  to {
+    background: red;
+  }
+}
