@@ -45,13 +45,20 @@ button {
 }
 
 .icon.win {
-  border: 2px solid gold;
+  border: 2px solid orange;
   background: yellow;
-  animation: winFlash 0.3s alternate 10;
+  animation: winFlash 0.2s alternate 15;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
 }
 
 @keyframes winFlash {
   from {
+    background: gold;
+  }
+
+  50% {
     background: orange;
   }
 
