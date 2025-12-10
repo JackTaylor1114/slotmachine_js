@@ -87,12 +87,12 @@ function startSpin()
 }
 
 /**
- * Get the current visible icons matrix
+ * Get the currently visible icons matrix
  * @returns a matrix of icons
  */
 function getVisibleIconsMatrix()
 {
-  // Each column is an array of icon elements (top to bottom)
+  //Each column is an array of icon elements (top to bottom)
   return COLUMNS.map(column =>
   {
     const icons = Array.from(column.querySelectorAll('.icon')).slice(0, VISIBLE_ICON_COUNT);
@@ -108,28 +108,62 @@ function checkAndMarkWins(matrix)
 {
   let winLines = [];
 
-  //Check rows
+  //Check all rows for sequences of 3 or more
   for (let row = 0; row < VISIBLE_ICON_COUNT; row++)
   {
-    let icons = matrix.map(col => col[row]);
-    let symbols = icons.map(icon => icon.textContent);
-    if (symbols.every(s => s === symbols[0]))
-      winLines.push(icons);
+    let count = 1;
+    let icons = [matrix[0][row]];
+    for (let col = 1; col < matrix.length; col++) 
+    {
+      if (matrix[col][row].textContent === matrix[col - 1][row].textContent)
+      {
+        count++;
+        icons.push(matrix[col][row]);
+      }
+      else
+      {
+        if (count >= 3) winLines.push([...icons]);
+        count = 1;
+        icons = [matrix[col][row]];
+      }
+    }
+    if (count >= 3) winLines.push([...icons]);
   }
 
-  //Check columns
+  //Check columns for sequences of 3 or more
   for (let col = 0; col < matrix.length; col++)
   {
-    let icons = matrix[col];
-    let symbols = icons.map(icon => icon.textContent);
-    if (symbols.every(s => s === symbols[0])) winLines.push(icons);
+    let count = 1;
+    let icons = [matrix[col][0]];
+    for (let row = 1; row < VISIBLE_ICON_COUNT; row++)
+    {
+      if (matrix[col][row].textContent === matrix[col][row - 1].textContent)
+      {
+        count++;
+        icons.push(matrix[col][row]);
+      }
+      else
+      {
+        if (count >= 3) winLines.push([...icons]);
+        count = 1;
+        icons = [matrix[col][row]];
+      }
+    }
+    if (count >= 3) winLines.push([...icons]);
   }
 
-  //Check diagonals
-  let diag1 = [matrix[0][0], matrix[1][1], matrix[2][2]];
-  let diag2 = [matrix[0][2], matrix[1][1], matrix[2][0]];
-  if (diag1.every(icon => icon.textContent === diag1[0].textContent)) winLines.push(diag1);
-  if (diag2.every(icon => icon.textContent === diag2[0].textContent)) winLines.push(diag2);
+  //Check diagonals of length 3 or more (left-to-right and right-to-left)
+  //For 5 columns and 3 rows, possible diagonals are only of length 3
+  for (let startCol = 0; startCol <= matrix.length - 3; startCol++)
+  {
+    //Left-to-right diagonal
+    let diag1 = [matrix[startCol][0], matrix[startCol + 1][1], matrix[startCol + 2][2]];
+    if (diag1.every(icon => icon.textContent === diag1[0].textContent)) winLines.push(diag1);
+
+    //Right-to-left diagonal
+    let diag2 = [matrix[startCol + 2][0], matrix[startCol + 1][1], matrix[startCol][2]];
+    if (diag2.every(icon => icon.textContent === diag2[0].textContent)) winLines.push(diag2);
+  }
 
   //Sequentially mark wins
   function markWin(index)
@@ -138,7 +172,7 @@ function checkAndMarkWins(matrix)
     {
       //Remove previous win highlights
       document.querySelectorAll('.icon.win').forEach(el => el.classList.remove('win'));
-
+      
       //Add win highlights and play winning sound
       winLines[index].forEach(icon => icon.classList.add('win'));
       const winAudio = document.getElementById('winSound');
