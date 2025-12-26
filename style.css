@@ -21,12 +21,12 @@ body {
   position: relative;
 }
 
-.icons {
+.symbols {
   position: absolute;
   width: 100%;
 }
 
-.icon {
+.symbol {
   height: 80px;
   font-size: 40px;
   display: flex;
@@ -44,7 +44,7 @@ button {
   margin-top: 20px;
 }
 
-.icon.win {
+.symbol.win {
   border: 2px solid orange;
   background: yellow;
   animation: winFlash 0.2s alternate 15;
