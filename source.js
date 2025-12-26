@@ -1,6 +1,10 @@
-const SYMBOLS = ['🍋', '🍒', '🔔', '🍇', '💎']; //Available symbols
+const SYMBOLS = ['🍉', '🌍', '💵', '💰', '💎']; //Available symbols
+const SYMBOL_SCORE_MULTIPLIER = { '🍉': 1, '🌍': 1.2, '💵': 1.5, '💰': 2, '💎': 5 };
 const VISIBLE_SYMBOL_COUNT = 3; //Number of rows visible per column
 const COLUMNS = Array.from(document.querySelectorAll('.column'));
+
+let TotalScore = 0; //Total score
+let SpinScore = 0; //Score for the current spin
 
 document.addEventListener("DOMContentLoaded", function () 
 {
@@ -8,7 +12,7 @@ document.addEventListener("DOMContentLoaded", function ()
 });
 
 /**
- * Initialize the slots with random symbols before start 
+ * Initialize the slots with random symbols before the game starts 
  */
 function initSlots()
 {
@@ -42,7 +46,11 @@ function createRandomSymbols(count)
  */
 function startSpin()
 {
-  // Play spinning sound
+  //Reset score
+  SpinScore = 0;
+  updateSpinScoreDisplay();
+
+  //Play spinning sound
   const audio = document.getElementById('wheelSound');
   audio.volume = 0.2;
   audio.currentTime = 0;
@@ -123,13 +131,13 @@ function checkAndMarkWins(matrix)
       }
       else
       {
-        if (count >= 3) winLines.push({symbols: [...winningFields], length: count, symbol: symbol});
+        if (count >= 3) winLines.push({ icons: [...winningFields], length: count, symbol: symbol });
         count = 1;
         winningFields = [matrix[col][row]];
         symbol = matrix[col][row].textContent;
       }
     }
-    if (count >= 3) winLines.push({symbols: [...winningFields], length: count, symbol: symbol});
+    if (count >= 3) winLines.push({ icons: [...winningFields], length: count, symbol: symbol });
   }
 
   //Check columns for sequences of 3 or more
@@ -147,13 +155,13 @@ function checkAndMarkWins(matrix)
       }
       else
       {
-        if (count >= 3) winLines.push({symbols: [...winningFields], length: count, symbol: symbol});
+        if (count >= 3) winLines.push({ icons: [...winningFields], length: count, symbol: symbol });
         count = 1;
         winningFields = [matrix[col][row]];
         symbol = matrix[col][row].textContent;
       }
     }
-    if (count >= 3) winLines.push({symbols: [...winningFields], length: count, symbol: symbol});
+    if (count >= 3) winLines.push({ icons: [...winningFields], length: count, symbol: symbol });
   }
 
   //Check diagonals of length 3 (left-to-right and right-to-left)
@@ -162,12 +170,24 @@ function checkAndMarkWins(matrix)
     //Left-to-right diagonal
     let diag1 = [matrix[startCol][0], matrix[startCol + 1][1], matrix[startCol + 2][2]];
     let symbol1 = diag1[0].textContent;
-    if (diag1.every(symbol => symbol.textContent === symbol1)) winLines.push({symbols: diag1, length: 3, symbol: symbol1});
+    if (diag1.every(icon => icon.textContent === symbol1)) winLines.push({ icons: diag1, length: 3, symbol: symbol1 });
 
     //Right-to-left diagonal
     let diag2 = [matrix[startCol + 2][0], matrix[startCol + 1][1], matrix[startCol][2]];
     let symbol2 = diag2[0].textContent;
-    if (diag2.every(symbol => symbol.textContent === symbol2)) winLines.push({symbols: diag2, length: 3, symbol: symbol2});
+    if (diag2.every(icon => icon.textContent === symbol2)) winLines.push({ icons: diag2, length: 3, symbol: symbol2 });
+  }
+
+  //Calculate the score for the current spin
+  for (let i = 0; i < winLines.length; i++) 
+  {
+    let score = 0;
+    if (winLines[i].length === 3) score = 100;
+    else if (winLines[i].length === 4) score = 200;
+    else if (winLines[i].length >= 5) score = 300;
+    let multiplier = SYMBOL_SCORE_MULTIPLIER[winLines[i].symbol] || 1;
+    score += score * multiplier;
+    winLines[i].score = score;
   }
 
   //Sequentially mark wins
@@ -175,16 +195,57 @@ function checkAndMarkWins(matrix)
   {
     if (index < winLines.length)
     {
+      //Update spin score and total score
+      SpinScore += winLines[index].score;
+      updateSpinScoreDisplay();
+      TotalScore += winLines[index].score;
+      updateScoreDisplay();
+
       //Remove previous win highlights
       document.querySelectorAll('.symbol.win').forEach(el => el.classList.remove('win'));
       //Add win highlights and play winning sound
-      winLines[index].symbols.forEach(symbol => symbol.classList.add('win'));
+      winLines[index].icons.forEach(icon => icon.classList.add('win'));
       const winAudio = document.getElementById('winSound');
       winAudio.currentTime = 0;
       winAudio.play();
       setTimeout(() => markWin(index + 1), 600);
     }
+    else 
+    {
+      //Play special sound when current spin sctore is high enough
+      if (SpinScore >= 1000)
+      {
+        const winAudio = document.getElementById('bigSpinL2Sound');
+        winAudio.currentTime = 0;
+        winAudio.play();
+      }
+      else if (SpinScore >= 500)
+      {
+        const winAudio = document.getElementById('bigSpinL1Sound');
+        winAudio.currentTime = 0;
+        winAudio.play();
+      }
+    }
   }
+
   //Start marking wins if there are any
   if (winLines.length > 0) markWin(0);
+}
+
+/**
+ * Update the total score
+ */
+function updateScoreDisplay() 
+{
+  const scoreDiv = document.getElementById('totalScore');
+  scoreDiv.textContent = TotalScore;
+}
+
+/**
+ * Update the score of the current spin
+ */
+function updateSpinScoreDisplay() 
+{
+  const spinScoreDiv = document.getElementById('spinScore');
+  spinScoreDiv.textContent = SpinScore;
 }

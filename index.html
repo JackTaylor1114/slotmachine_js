@@ -1,16 +1,12 @@
 <!DOCTYPE html>
 <html lang="de">
-
 <head>
   <meta charset="UTF-8">
   <title>Slot Machine</title>
   <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
-
   <h1>🎰 Slot Machine 🎰</h1>
-
   <div class="machine" id="machine">
     <div class="column" id="column0">
       <div class="symbols"></div>
@@ -28,13 +24,25 @@
       <div class="symbols"></div>
     </div>
   </div>
-
-  <button onclick="startSpin()">Spin!</button>
-
+  <div id="spinScoreDisplay">Current spin: <span id="spinScore">0</span></div>
+  <div id="scoreDisplay">Total: <span id="totalScore">0</span></div>
+  <button id="spinButton" onclick="startSpin()">Spin!</button>
   <audio id="wheelSound" src="audio/wheel.wav"></audio>
   <audio id="winSound" src="audio/win.wav"></audio>
-
+  <audio id="bigSpinL1Sound" src="audio/bigSpin_level1.mp3"></audio>
+  <audio id="bigSpinL2Sound" src="audio/bigSpin_level2.mp3"></audio>
   <script type="text/javascript" src="source.js"></script>
+  <div id="instructions">
+    <h3>Score:</h3>
+    Win by getting the same symbol in a row, column or diagonally!<br><br>
+    3️⃣x same symbol: <strong>100</strong> points<br>
+    4️⃣x same symbol: <strong>200</strong> points<br>
+    5️⃣x same symbol: <strong>300</strong> points<br><br>
+    🍉 = no multiplier<br>
+    🌍 = 1.2x points<br>
+    💵 = 1.5x points<br>
+    💰 = 2x points<br>
+    💎 = 5x points<br>
+  </div>
 </body>
-
 </html>

@@ -1,18 +1,21 @@
-body {
+body 
+{
   background: #111;
   color: white;
   text-align: center;
   font-family: monospace;
 }
 
-.machine {
+.machine 
+{
   display: flex;
   justify-content: center;
   gap: 10px;
   margin: 30px auto;
 }
 
-.column {
+.column 
+{
   width: 80px;
   height: 240px;
   overflow: hidden;
@@ -21,12 +24,14 @@ body {
   position: relative;
 }
 
-.symbols {
+.symbols 
+{
   position: absolute;
   width: 100%;
 }
 
-.symbol {
+.symbol 
+{
   height: 80px;
   font-size: 40px;
   display: flex;
@@ -34,7 +39,8 @@ body {
   justify-content: center;
 }
 
-button {
+#spinButton 
+{
   padding: 12px 24px;
   font-size: 20px;
   background: red;
@@ -44,7 +50,8 @@ button {
   margin-top: 20px;
 }
 
-.symbol.win {
+.symbol.win 
+{
   border: 2px solid orange;
   background: yellow;
   animation: winFlash 0.2s alternate 15;
@@ -53,7 +60,25 @@ button {
   box-sizing: border-box;
 }
 
-@keyframes winFlash {
+#scoreDisplay
+{
+  margin-top: 10px;
+  font-size: 25px;
+  font-weight: bold;
+}
+
+#spinScoreDisplay
+{
+  font-size: 20px;
+}
+
+#instructions
+{
+  margin-top: 50px;
+}
+
+@keyframes winFlash 
+{
   from {
     background: gold;
   }
