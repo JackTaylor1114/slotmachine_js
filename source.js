@@ -186,7 +186,7 @@ function checkAndMarkWins(matrix)
     else if (winLines[i].length === 4) score = 200;
     else if (winLines[i].length >= 5) score = 300;
     let multiplier = SYMBOL_SCORE_MULTIPLIER[winLines[i].symbol] || 1;
-    score += score * multiplier;
+    score = score * multiplier;
     winLines[i].score = score;
   }
 
